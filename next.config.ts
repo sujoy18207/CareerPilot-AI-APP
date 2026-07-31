@@ -6,6 +6,10 @@ try {
 } catch {}
 
 const nextConfig: NextConfig = {
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
   serverExternalPackages: ["pdfjs-dist", "pdf-parse"],
   outputFileTracingIncludes: {
     // pdf-parse v2 runs pdf.js. Two things load via bundler-opaque dynamic
