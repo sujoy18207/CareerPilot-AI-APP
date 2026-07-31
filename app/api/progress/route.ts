@@ -5,6 +5,8 @@ import UserProgress from "@/models/UserProgress";
 import Roadmap from "@/models/Roadmap";
 import Document from "@/models/Document";
 
+export const dynamic = "force-dynamic";
+
 // Helper function to update the user active streak
 async function getOrUpdateProgress(userId: string) {
   const today = new Date();

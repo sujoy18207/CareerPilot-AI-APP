@@ -4,6 +4,8 @@ import dbConnect from "@/lib/db";
 import Resume from "@/models/Resume";
 import { defaultResumeContent } from "@/lib/resume";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const session = await auth();

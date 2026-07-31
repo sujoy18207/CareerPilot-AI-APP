@@ -5,6 +5,8 @@ import UserProfile from "@/models/UserProfile";
 import CareerRecommendation from "@/models/CareerRecommendation";
 import { generateStructuredJson } from "@/lib/llm";
 
+export const dynamic = "force-dynamic";
+
 interface LlmRecommendation {
   careerPath: string;
   matchScore: number;
