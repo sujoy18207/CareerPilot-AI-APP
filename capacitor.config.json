@@ -1,0 +1,6 @@
+{
+  "appId": "com.careerpilot.app",
+  "appName": "CareerPilot",
+  "webDir": "out",
+  "bundledWebRuntime": false
+}
