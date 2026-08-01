@@ -6,7 +6,6 @@ try {
 } catch {}
 
 const nextConfig: NextConfig = {
-  output: 'export',
   images: {
     unoptimized: true,
   },
