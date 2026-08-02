@@ -39,6 +39,9 @@ service-account*.json
 # ===== vercel / deploy =====
 .vercel
 
+# Capacitor: TypeScript config is source of truth
+capacitor.config.json
+
 # ===== typescript / tooling caches =====
 *.tsbuildinfo
 next-env.d.ts
@@ -71,6 +74,7 @@ temp/
 *.tmp
 *.temp
 .cache/
+.gradle/
 
 # ===== uploaded user files (local/dev) — keep folder =====
 public/uploads/*
@@ -92,5 +96,3 @@ test/data/
 .parcel-cache
 .sass-cache
 .gstack/
-
-.vercel
