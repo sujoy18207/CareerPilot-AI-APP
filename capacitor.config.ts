@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'CareerPilot',
   webDir: 'out',
   server: {
-    url: 'https://career-pilot-ai-app.vercel.app/',
+    url: 'https://www.careerpilot.cc/',
     cleartext: true
   }
 };

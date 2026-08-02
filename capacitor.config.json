@@ -4,7 +4,7 @@
   "webDir": "out",
   "bundledWebRuntime": false,
   "server": {
-    "url": "https://career-pilot-ai-app.vercel.app/",
+    "url": "https://www.careerpilot.cc/",
     "cleartext": true
   }
 }
