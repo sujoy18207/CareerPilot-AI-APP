@@ -19,7 +19,9 @@
 
 # ===== next.js / build =====
 /.next/
-/out/
+# Next static export dir — keep stub index for Capacitor/Appflow (webDir)
+/out/*
+!/out/index.html
 /build
 /dist
 .turbo
