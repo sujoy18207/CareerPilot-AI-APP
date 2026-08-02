@@ -7,6 +7,11 @@ const config: CapacitorConfig = {
   server: {
     url: 'https://www.careerpilot.cc/',
     cleartext: true
+  },
+  plugins: {
+    CapacitorCookies: {
+      enabled: true
+    }
   }
 };
 
