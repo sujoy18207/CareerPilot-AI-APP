@@ -2,5 +2,9 @@
   "appId": "com.careerpilot.app",
   "appName": "CareerPilot",
   "webDir": "out",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://career-pilot-ai-app.vercel.app/",
+    "cleartext": true
+  }
 }
