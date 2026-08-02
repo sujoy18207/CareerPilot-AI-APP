@@ -90,3 +90,5 @@ test/data/
 .parcel-cache
 .sass-cache
 .gstack/
+
+.vercel

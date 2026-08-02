@@ -44,7 +44,7 @@ export function getLlmClient(): OpenAI {
  * "gemini-3.1-flash-lite" (or "gemini-3-flash" for PDF) if GEMINI_API_KEY is present,
  * or "gpt-4o-mini" (or "gpt-4o" for PDF) if using OpenAI. Can be overridden via environment variables.
  */
-export function getLlmModel(isPdf = false, modelSelection?: "primary" | "opus" | "gemini"): string {
+export function getLlmModel(isPdf = false, modelSelection?: string): string {
   const zenMuxKey = process.env.ZENMUX_API_KEY?.trim();
   const geminiKey = process.env.GEMINI_API_KEY?.trim();
 
@@ -59,6 +59,9 @@ export function getLlmModel(isPdf = false, modelSelection?: "primary" | "opus" |
     }
     if (modelSelection === "gemini") {
       return "google/gemini-3.5-flash";
+    }
+    if (modelSelection && modelSelection !== "primary") {
+      return modelSelection; // Allow custom model selection directly if selected
     }
     if (isPdf) {
       return process.env.ZENMUX_PDF_MODEL || process.env.ZENMUX_MODEL || "openai/gpt-5.5";
@@ -96,13 +99,14 @@ export async function listLlmModels(): Promise<{ id: string; label: string }[]> 
       try {
         const models = await client.models.list();
         return models.data
-          .filter(m => m.id.includes("gpt") || m.id.includes("claude") || m.id.includes("gemini") || m.id.includes("llama"))
+          .filter(m => m.id.includes("gpt") || m.id.includes("claude") || m.id.includes("gemini") || m.id.includes("llama") || m.id.includes("deepseek"))
           .map(m => ({ id: m.id, label: m.id.split("/").pop() || m.id }));
       } catch {
         return [
           { id: "primary", label: "Default Model" },
           { id: "opus", label: "Claude 4.6 Opus" },
           { id: "gemini", label: "Gemini 3.5 Flash" },
+          { id: "deepseek/deepseek-chat", label: "DeepSeek Chat" },
         ];
       }
     }
