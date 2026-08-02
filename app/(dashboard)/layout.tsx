@@ -48,7 +48,7 @@ export default function DashboardLayout({
           isCollapsed ? "md:ml-0" : "md:ml-64"
         )}
       >
-        <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12 py-6 md:py-10">
+        <div className="w-full max-w-[1800px] mx-auto px-3 sm:px-6 md:px-10 lg:px-12 py-4 md:py-10">
           {children}
         </div>
       </main>

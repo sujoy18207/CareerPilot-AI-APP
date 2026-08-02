@@ -6,6 +6,7 @@ import MessageBubble from "@/components/tutor/MessageBubble";
 import UploadDropzone from "./UploadDropzone";
 import { useVoice } from "@/components/voice/useVoice";
 import VoiceHUD from "@/components/voice/VoiceHUD";
+import { getApiUrl } from "@/lib/api-config";
 
 interface Message {
   role: "user" | "assistant" | "system";
@@ -36,25 +37,28 @@ interface UnifiedChatProps {
   newChatNonce?: number;
 }
 
-const MODEL_LABELS: Record<ModelSelection, string> = {
-  gemini: "Gemini 3.5 Flash",
-  opus: "Claude 4.6 Opus",
-  primary: "Default Model",
-};
+interface ModelOption {
+  id: string;
+  label: string;
+}
 
 function ModelPicker({
-  selectedModel,
-  setSelectedModel,
+  selectedModelId,
+  setSelectedModelId,
   showModelDropdown,
   setShowModelDropdown,
+  availableModels,
   placement = "up",
 }: {
-  selectedModel: ModelSelection;
-  setSelectedModel: (model: ModelSelection) => void;
+  selectedModelId: string;
+  setSelectedModelId: (id: string) => void;
   showModelDropdown: boolean;
   setShowModelDropdown: (show: boolean) => void;
+  availableModels: ModelOption[];
   placement?: "up" | "down";
 }) {
+  const selectedLabel = availableModels.find(m => m.id === selectedModelId)?.label || "Select Model";
+
   return (
     <div className="relative">
       <button
@@ -63,32 +67,32 @@ function ModelPicker({
         className="bg-background hover:bg-card border border-border px-3 py-1.5 rounded-full flex items-center gap-1.5 text-[11px] font-bold text-foreground transition-all cursor-pointer"
       >
         <span className="material-symbols-outlined text-[13px] text-primary">psychology</span>
-        {MODEL_LABELS[selectedModel]}
+        {selectedLabel}
       </button>
 
       {showModelDropdown && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setShowModelDropdown(false)} />
           <div
-            className={`absolute z-50 min-w-[140px] bg-card border-2 border-border p-1 shadow-lg rounded-xl flex flex-col gap-0.5 ${
+            className={`absolute z-50 min-w-[160px] bg-card border-2 border-border p-1 shadow-lg rounded-xl flex flex-col gap-0.5 ${
               placement === "up" ? "bottom-full mb-2" : "top-full mt-2"
             }`}
           >
-            {(["primary", "opus", "gemini"] as ModelSelection[]).map((id) => (
+            {availableModels.map((model) => (
               <button
-                key={id}
+                key={model.id}
                 type="button"
                 onClick={() => {
-                  setSelectedModel(id);
+                  setSelectedModelId(model.id);
                   setShowModelDropdown(false);
                 }}
                 className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
-                  selectedModel === id
+                  selectedModelId === model.id
                     ? "bg-primary text-primary-foreground font-bold"
                     : "text-foreground hover:bg-sidebar"
                 }`}
               >
-                {MODEL_LABELS[id]}
+                {model.label}
               </button>
             ))}
           </div>
@@ -125,7 +129,10 @@ export default function UnifiedChat({
 
   const [isMobile, setIsMobile] = useState(false);
 
-  const [selectedModel, setSelectedModel] = useState<ModelSelection>("gemini");
+  const [availableModels, setAvailableModels] = useState<ModelOption[]>([
+    { id: "primary", label: "Default Model" }
+  ]);
+  const [selectedModel, setSelectedModel] = useState<string>("primary");
   const [showModelDropdown, setShowModelDropdown] = useState(false);
 
   const [attachments, setAttachments] = useState<any[]>([]);
@@ -144,6 +151,24 @@ export default function UnifiedChat({
   }, []);
 
   useEffect(() => {
+    async function fetchModels() {
+      try {
+        const res = await fetch(getApiUrl("/api/ai-hub/models"));
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setAvailableModels(data);
+            setSelectedModel(data[0].id);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch models:", err);
+      }
+    }
+    fetchModels();
+  }, []);
+
+  useEffect(() => {
     if (!activeThreadId) {
       setMessages([]);
       setInput("");
@@ -154,7 +179,7 @@ export default function UnifiedChat({
     async function fetchHistory() {
       setLoadingHistory(true);
       try {
-        const res = await fetch(`/api/ai-hub/threads/${activeThreadId}`);
+        const res = await fetch(getApiUrl(`/api/ai-hub/threads/${activeThreadId}`));
         if (res.ok) {
           const data = await res.json();
           setMessages(data.messages || []);
@@ -207,7 +232,7 @@ export default function UnifiedChat({
     formData.append("file", file);
 
     try {
-      const res = await fetch("/api/ai-hub/upload", {
+      const res = await fetch(getApiUrl("/api/ai-hub/upload"), {
         method: "POST",
         body: formData,
       });
@@ -280,7 +305,7 @@ export default function UnifiedChat({
     setLoading(true);
 
     try {
-      const res = await fetch("/api/ai-hub/chat", {
+      const res = await fetch(getApiUrl("/api/ai-hub/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -437,10 +462,11 @@ export default function UnifiedChat({
 
                 <div className="flex items-center gap-2">
                   <ModelPicker
-                    selectedModel={selectedModel}
-                    setSelectedModel={setSelectedModel}
+                    selectedModelId={selectedModel}
+                    setSelectedModelId={setSelectedModel}
                     showModelDropdown={showModelDropdown}
                     setShowModelDropdown={setShowModelDropdown}
+                    availableModels={availableModels}
                     placement="up"
                   />
 
@@ -607,10 +633,11 @@ export default function UnifiedChat({
                   <span className="material-symbols-outlined text-[16px]">attach_file</span>
                 </button>
                 <ModelPicker
-                  selectedModel={selectedModel}
-                  setSelectedModel={setSelectedModel}
+                  selectedModelId={selectedModel}
+                  setSelectedModelId={setSelectedModel}
                   showModelDropdown={showModelDropdown}
                   setShowModelDropdown={setShowModelDropdown}
+                  availableModels={availableModels}
                   placement="up"
                 />
               </div>

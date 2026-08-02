@@ -5,6 +5,7 @@ import MessageBubble from "./MessageBubble";
 import { toast } from "sonner";
 import { useVoice } from "@/components/voice/useVoice";
 import VoiceHUD from "@/components/voice/VoiceHUD";
+import { getApiUrl } from "@/lib/api-config";
 
 interface Message {
   role: "user" | "assistant";
@@ -34,7 +35,7 @@ export default function ChatInterface() {
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch("/api/tutor/history");
+      const res = await fetch(getApiUrl("/api/tutor/history"));
       if (res.ok) {
         const data = await res.json();
         setMessages(data);
@@ -75,7 +76,7 @@ export default function ChatInterface() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/tutor/chat", {
+      const res = await fetch(getApiUrl("/api/tutor/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessageText }),
@@ -121,7 +122,7 @@ export default function ChatInterface() {
     }
 
     try {
-      const res = await fetch("/api/tutor/history", {
+      const res = await fetch(getApiUrl("/api/tutor/history"), {
         method: "DELETE",
       });
 

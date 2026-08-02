@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { HackerRankAnalysis } from "@/lib/resume";
+import { getApiUrl } from "@/lib/api-config";
 
 const RUBRIC = [
   { key: "openSource" as const, label: "Open Source", max: 35, icon: "diversity_3" },
@@ -39,7 +40,7 @@ export default function ResumeAtsPage() {
   useEffect(() => {
     async function fetchResumes() {
       try {
-        const res = await fetch("/api/resume");
+        const res = await fetch(getApiUrl("/api/resume"));
         if (res.ok) {
           const data = await res.json();
           setResumes(data);
@@ -95,7 +96,7 @@ export default function ResumeAtsPage() {
         formData.append("resumeText", resumeText);
       }
 
-      const res = await fetch("/api/resume/ats-analyze", {
+      const res = await fetch(getApiUrl("/api/resume/ats-analyze"), {
         method: "POST",
         body: formData,
       });

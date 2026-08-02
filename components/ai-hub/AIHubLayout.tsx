@@ -10,6 +10,7 @@ import {
   applyAccent,
   DEFAULT_ACCENT,
 } from "@/components/layout/AccentColor";
+import { getApiUrl } from "@/lib/api-config";
 import BrandLogo from "@/components/layout/BrandLogo";
 import DocumentLibrary from "./DocumentLibrary";
 import UnifiedChat from "./UnifiedChat";
@@ -67,7 +68,7 @@ export default function AIHubLayout() {
 
   const fetchDocuments = useCallback(async () => {
     try {
-      const res = await fetch("/api/ai-hub/documents");
+      const res = await fetch(getApiUrl("/api/ai-hub/documents"));
       if (!res.ok) {
         throw new Error("Failed to load documents");
       }
@@ -83,7 +84,7 @@ export default function AIHubLayout() {
 
   const fetchThreads = useCallback(async () => {
     try {
-      const res = await fetch("/api/ai-hub/threads");
+      const res = await fetch(getApiUrl("/api/ai-hub/threads"));
       if (res.ok) {
         const data = await res.json();
         setThreads(data);
@@ -156,7 +157,7 @@ export default function AIHubLayout() {
   const handleRenameThread = async (id: string, newTitle: string) => {
     if (!newTitle.trim()) return;
     try {
-      const res = await fetch(`/api/ai-hub/threads/${id}`, {
+      const res = await fetch(getApiUrl(`/api/ai-hub/threads/${id}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: newTitle }),
@@ -175,7 +176,7 @@ export default function AIHubLayout() {
 
   const handleDeleteThread = async (id: string) => {
     try {
-      const res = await fetch(`/api/ai-hub/threads/${id}`, {
+      const res = await fetch(getApiUrl(`/api/ai-hub/threads/${id}`), {
         method: "DELETE",
       });
       if (res.ok) {
@@ -214,7 +215,7 @@ export default function AIHubLayout() {
     const { id } = docToDelete;
     setDeletingDocId(id);
     try {
-      const res = await fetch(`/api/ai-hub/documents/${id}`, { method: "DELETE" });
+      const res = await fetch(getApiUrl(`/api/ai-hub/documents/${id}`), { method: "DELETE" });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.message || "Failed to delete document");

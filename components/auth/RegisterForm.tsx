@@ -9,6 +9,7 @@ import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { getApiUrl } from "@/lib/api-config";
 
 const registerSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
@@ -43,7 +44,7 @@ export default function RegisterForm() {
   const onSubmit = async (values: RegisterFormValues) => {
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch(getApiUrl("/api/auth/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

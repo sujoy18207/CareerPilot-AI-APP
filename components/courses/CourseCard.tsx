@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
 import SafeImage from "@/components/ui/SafeImage";
+import { getApiUrl } from "@/lib/api-config";
 
 interface Course {
   _id: string;
@@ -34,7 +35,7 @@ export default function CourseCard({ course }: CourseCardProps) {
     setLoading(true);
     try {
       const action = completed ? "uncomplete_course" : "complete_course";
-      const res = await fetch("/api/progress", {
+      const res = await fetch(getApiUrl("/api/progress"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action }),

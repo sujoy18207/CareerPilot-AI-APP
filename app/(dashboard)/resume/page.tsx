@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api-config";
 
 export default function ResumePage() {
   const [resumes, setResumes] = useState<any[]>([]);
@@ -16,7 +17,7 @@ export default function ResumePage() {
   useEffect(() => {
     async function fetchResumes() {
       try {
-        const res = await fetch("/api/resume");
+        const res = await fetch(getApiUrl("/api/resume"));
         if (!res.ok) {
           throw new Error("Failed to load resumes");
         }
@@ -34,7 +35,7 @@ export default function ResumePage() {
   const createResume = async () => {
     setCreating(true);
     try {
-      const res = await fetch("/api/resume", {
+      const res = await fetch(getApiUrl("/api/resume"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: "My Career Pilot Resume" }),
@@ -58,7 +59,7 @@ export default function ResumePage() {
     const id = resumeToDelete._id;
     setDeletingId(id);
     try {
-      const res = await fetch(`/api/resume/${id}`, { method: "DELETE" });
+      const res = await fetch(getApiUrl(`/api/resume/${id}`), { method: "DELETE" });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.message || "Failed to delete resume");

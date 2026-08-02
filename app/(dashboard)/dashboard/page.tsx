@@ -15,6 +15,7 @@ import StatsCard from "@/components/dashboard/StatsCard";
 import ProgressChart from "@/components/dashboard/ProgressChart";
 import StreakTracker from "@/components/dashboard/StreakTracker";
 import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api-config";
 
 interface CareerRecommendation {
   _id: string;
@@ -55,8 +56,8 @@ export default function DashboardHome() {
   const fetchDashboardData = async () => {
     try {
       const [recRes, progRes] = await Promise.all([
-        fetch("/api/career/recommendations"),
-        fetch("/api/progress"),
+        fetch(getApiUrl("/api/career/recommendations")),
+        fetch(getApiUrl("/api/progress")),
       ]);
 
       if (recRes.ok) {

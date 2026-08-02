@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useVoice } from "@/components/voice/useVoice";
 import VoiceHUD from "@/components/voice/VoiceHUD";
+import { getApiUrl } from "@/lib/api-config";
 
 const assessmentSchema = z.object({
   goals: z.string().min(10, { message: "Please describe your career goals in at least 10 characters." }),
@@ -73,7 +74,7 @@ export default function AssessmentForm({ onSuccess }: AssessmentFormProps) {
   useEffect(() => {
     async function loadProfile() {
       try {
-        const res = await fetch("/api/career/assess");
+        const res = await fetch(getApiUrl("/api/career/assess"));
         if (res.ok) {
           const profile = await res.json();
           if (profile) {
@@ -224,7 +225,7 @@ export default function AssessmentForm({ onSuccess }: AssessmentFormProps) {
         );
 
         // 1. Call voice-extract endpoint to get structured profile fields
-        const extractRes = await fetch("/api/career/voice-extract", {
+        const extractRes = await fetch(getApiUrl("/api/career/voice-extract"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ conversation: updatedAnswers }),
@@ -237,7 +238,7 @@ export default function AssessmentForm({ onSuccess }: AssessmentFormProps) {
         const profileData = await extractRes.json();
 
         // 2. Call existing Career Recommendations Engine with structured JSON
-        const apiPromise = fetch("/api/career/assess", {
+        const apiPromise = fetch(getApiUrl("/api/career/assess"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -308,7 +309,7 @@ export default function AssessmentForm({ onSuccess }: AssessmentFormProps) {
     };
 
     try {
-      const apiPromise = fetch("/api/career/assess", {
+      const apiPromise = fetch(getApiUrl("/api/career/assess"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -9,6 +9,7 @@ import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { getApiUrl } from "@/lib/api-config";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address format" }),
@@ -31,7 +32,7 @@ export default function LoginForm() {
     setDemoStep("Creating demo account...");
     try {
       // 1. Ensure demo user exists (ignore "already registered" responses).
-      const registerRes = await fetch("/api/auth/register", {
+      const registerRes = await fetch(getApiUrl("/api/auth/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,7 +65,7 @@ export default function LoginForm() {
 
       setDemoStep("Seeding demo data...");
       // Seed via POST so we stay in-app (GET /api/seed was dumping JSON in the browser).
-      const seedRes = await fetch("/api/seed", { method: "POST" });
+      const seedRes = await fetch(getApiUrl("/api/seed"), { method: "POST" });
       if (!seedRes.ok && seedRes.status !== 200) {
         const body = await seedRes.json().catch(() => ({}));
         // Already seeded is fine — treat as success via status 200 above.

@@ -5,6 +5,7 @@ import Link from "next/link";
 import CourseCard from "@/components/courses/CourseCard";
 import CourseFilters from "@/components/courses/CourseFilters";
 import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api-config";
 
 interface Course {
   _id: string;
@@ -42,7 +43,7 @@ export default function CoursesPage() {
     else setLoading(true);
 
     try {
-      const url = new URL("/api/courses", window.location.origin);
+      const url = new URL(getApiUrl("/api/courses"), window.location.origin);
       url.searchParams.append("level", level);
       url.searchParams.append("budget", budget);
       if (isRefresh) url.searchParams.append("refresh", "1");

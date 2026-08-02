@@ -67,15 +67,64 @@ export function getLlmModel(isPdf = false, modelSelection?: "primary" | "opus" |
   }
 
   if (geminiKey && !isPlaceholder(geminiKey)) {
+    if (modelSelection === "opus") return "gemini-1.5-pro";
+    if (modelSelection === "gemini") return "gemini-1.5-flash";
     if (isPdf) {
-      return process.env.GEMINI_PDF_MODEL || "gemini-3.5-flash";
+      return process.env.GEMINI_PDF_MODEL || "gemini-1.5-flash";
     }
-    return process.env.GEMINI_MODEL || "gemini-3.5-flash";
+    return process.env.GEMINI_MODEL || "gemini-1.5-flash";
   }
+  if (modelSelection === "opus") return "gpt-4o";
+  if (modelSelection === "gemini") return "gpt-4o-mini";
   if (isPdf) {
-    return process.env.OPENAI_PDF_MODEL || "gpt-5.5";
+    return process.env.OPENAI_PDF_MODEL || "gpt-4o";
   }
-  return process.env.OPENAI_MODEL || "gpt-5.5";
+  return process.env.OPENAI_MODEL || "gpt-4o-mini";
+}
+
+/**
+ * Fetches available models from the configured LLM provider.
+ */
+export async function listLlmModels(): Promise<{ id: string; label: string }[]> {
+  const zenMuxKey = process.env.ZENMUX_API_KEY?.trim();
+  const geminiKey = process.env.GEMINI_API_KEY?.trim();
+  const client = getLlmClient();
+
+  try {
+    // If ZenMux, try listing models or return common ones
+    if (zenMuxKey && zenMuxKey !== "your_zenmux_api_key_here") {
+      try {
+        const models = await client.models.list();
+        return models.data
+          .filter(m => m.id.includes("gpt") || m.id.includes("claude") || m.id.includes("gemini") || m.id.includes("llama"))
+          .map(m => ({ id: m.id, label: m.id.split("/").pop() || m.id }));
+      } catch {
+        return [
+          { id: "primary", label: "Default Model" },
+          { id: "opus", label: "Claude 4.6 Opus" },
+          { id: "gemini", label: "Gemini 3.5 Flash" },
+        ];
+      }
+    }
+
+    // For Gemini/OpenAI, return a sensible default list if list() fails or is restricted
+    if (geminiKey && geminiKey !== "your_gemini_api_key_here") {
+      return [
+        { id: "gemini-1.5-flash", label: "Gemini 1.5 Flash" },
+        { id: "gemini-1.5-pro", label: "Gemini 1.5 Pro" },
+        { id: "gemini-2.0-flash-exp", label: "Gemini 2.0 Flash" },
+      ];
+    }
+
+    return [
+      { id: "gpt-4o-mini", label: "GPT-4o Mini" },
+      { id: "gpt-4o", label: "GPT-4o" },
+      { id: "o1-mini", label: "o1 Mini" },
+    ];
+  } catch (error) {
+    console.error("List Models Error:", error);
+    return [{ id: "primary", label: "Default Model" }];
+  }
 }
 
 function extractJsonContent(content: string): string {

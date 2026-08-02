@@ -16,6 +16,7 @@ import {
   Globe,
   Zap,
 } from "lucide-react";
+import { getApiUrl } from "@/lib/api-config";
 
 interface NewsArticle {
   _id: string;
@@ -104,7 +105,7 @@ export default function NewsPage() {
   const loadNews = useCallback(async (forceRefresh = false, silent = false) => {
     try {
       if (forceRefresh && !silent) setRefreshing(true);
-      const url = forceRefresh ? "/api/news?refresh=true" : "/api/news";
+      const url = forceRefresh ? getApiUrl("/api/news?refresh=true") : getApiUrl("/api/news");
       const res = await fetch(url);
       if (!res.ok) throw new Error();
       const data = await res.json();

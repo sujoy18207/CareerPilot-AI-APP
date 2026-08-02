@@ -16,6 +16,7 @@ import {
   Link as LinkIcon
 } from "lucide-react";
 import { formatHackathonPrize } from "@/lib/formatHackathonPrize";
+import { getApiUrl } from "@/lib/api-config";
 
 interface ProjectIdea {
   _id: string;
@@ -87,7 +88,7 @@ export default function ProjectsPage() {
   const fetchIdeas = useCallback(async () => {
     setIdeasLoading(true);
     try {
-      const res = await fetch("/api/projects");
+      const res = await fetch(getApiUrl("/api/projects"));
       if (!res.ok) throw new Error("Failed to load project ideas");
       const data = await res.json();
       setIdeas(data);
@@ -101,7 +102,7 @@ export default function ProjectsPage() {
   const fetchHackathons = useCallback(async () => {
     setHackathonsLoading(true);
     try {
-      const res = await fetch("/api/projects?mode=hackathons");
+      const res = await fetch(getApiUrl("/api/projects?mode=hackathons"));
       if (!res.ok) throw new Error("Failed to load hackathons");
       const data = await res.json();
       setHackathons(data);
@@ -115,7 +116,7 @@ export default function ProjectsPage() {
   const fetchTeams = useCallback(async () => {
     setTeamsLoading(true);
     try {
-      const res = await fetch("/api/projects/teams");
+      const res = await fetch(getApiUrl("/api/projects/teams"));
       if (!res.ok) throw new Error("Failed to load team posts");
       const data = await res.json();
       setTeams(data);
@@ -139,7 +140,7 @@ export default function ProjectsPage() {
     setGenerating(true);
     toast.info("Generating project ideas with AI...");
     try {
-      const res = await fetch("/api/projects", {
+      const res = await fetch(getApiUrl("/api/projects"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
@@ -161,7 +162,7 @@ export default function ProjectsPage() {
     }
 
     try {
-      const res = await fetch("/api/projects/teams", {
+      const res = await fetch(getApiUrl("/api/projects/teams"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

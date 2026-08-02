@@ -6,6 +6,7 @@ import { defaultResumeContent } from "@/lib/resume";
 import ATSScoreCard from "./ATSScoreCard";
 import JDMatcher from "./JDMatcher";
 import ResumePreview from "./ResumePreview";
+import { getApiUrl } from "@/lib/api-config";
 
 interface ResumeBuilderProps {
   resumeId: string;
@@ -111,7 +112,7 @@ export default function ResumeBuilder({ resumeId }: ResumeBuilderProps) {
   useEffect(() => {
     async function loadResume() {
       try {
-        const res = await fetch(`/api/resume/${resumeId}`);
+        const res = await fetch(getApiUrl(`/api/resume/${resumeId}`));
         if (!res.ok) {
           throw new Error("Failed to load resume");
         }
@@ -152,7 +153,7 @@ export default function ResumeBuilder({ resumeId }: ResumeBuilderProps) {
   const saveResume = async () => {
     setSaving(true);
     try {
-      const res = await fetch(`/api/resume/${resumeId}`, {
+      const res = await fetch(getApiUrl(`/api/resume/${resumeId}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -178,7 +179,7 @@ export default function ResumeBuilder({ resumeId }: ResumeBuilderProps) {
     await saveResume();
     setAnalyzing(true);
     try {
-      const res = await fetch(`/api/resume/${resumeId}/analyze`, { method: "POST" });
+      const res = await fetch(getApiUrl(`/api/resume/${resumeId}/analyze`), { method: "POST" });
       if (!res.ok) {
         throw new Error("Failed to analyze resume");
       }

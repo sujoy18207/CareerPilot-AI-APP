@@ -5,6 +5,7 @@ import PdfUploader from "@/components/pdf/PdfUploader";
 import SummaryViewer from "@/components/pdf/SummaryViewer";
 import QuizViewer from "@/components/pdf/QuizViewer";
 import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api-config";
 
 interface DocumentItem {
   _id: string;
@@ -25,7 +26,7 @@ export default function PdfPage() {
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch("/api/pdf/upload");
+      const res = await fetch(getApiUrl("/api/pdf/upload"));
       if (res.ok) {
         const data = await res.json();
         setDocuments(data);
@@ -66,8 +67,8 @@ export default function PdfPage() {
     try {
       if (!doc.summary || !doc.questions) {
         const [summaryRes, questionsRes] = await Promise.all([
-          fetch(`/api/pdf/summary/${doc._id}`),
-          fetch(`/api/pdf/questions/${doc._id}`),
+          fetch(getApiUrl(`/api/pdf/summary/${doc._id}`)),
+          fetch(getApiUrl(`/api/pdf/questions/${doc._id}`)),
         ]);
 
         if (!summaryRes.ok || !questionsRes.ok) {

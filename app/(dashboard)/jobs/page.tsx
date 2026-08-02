@@ -14,6 +14,7 @@ import {
   Check,
 } from "lucide-react";
 import SafeImage from "@/components/ui/SafeImage";
+import { getApiUrl } from "@/lib/api-config";
 
 interface JobListing {
   _id: string;
@@ -88,7 +89,7 @@ export default function JobsPage() {
   const fetchJobs = useCallback(async () => {
     setLoading(true);
     try {
-      const url = new URL("/api/jobs", window.location.origin);
+      const url = new URL(getApiUrl("/api/jobs"), window.location.origin);
       if (selectedType !== "all") {
         url.searchParams.append("type", selectedType);
       }
@@ -117,7 +118,7 @@ export default function JobsPage() {
   const fetchApplications = useCallback(async () => {
     setTrackerLoading(true);
     try {
-      const res = await fetch("/api/jobs/applications");
+      const res = await fetch(getApiUrl("/api/jobs/applications"));
       if (!res.ok) throw new Error("Failed to load tracker");
       const data = await res.json();
       setApplications(Array.isArray(data) ? data : []);
@@ -143,7 +144,7 @@ export default function JobsPage() {
 
   const handleSaveJob = async (job: JobListing) => {
     try {
-      const res = await fetch("/api/jobs/applications", {
+      const res = await fetch(getApiUrl("/api/jobs/applications"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -168,7 +169,7 @@ export default function JobsPage() {
 
   const handleUpdateStatus = async (applicationId: string, newStatus: string) => {
     try {
-      const res = await fetch("/api/jobs/applications", {
+      const res = await fetch(getApiUrl("/api/jobs/applications"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ applicationId, status: newStatus }),
@@ -188,7 +189,7 @@ export default function JobsPage() {
       return;
     }
     try {
-      const res = await fetch("/api/jobs/applications", {
+      const res = await fetch(getApiUrl("/api/jobs/applications"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

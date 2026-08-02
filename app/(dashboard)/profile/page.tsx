@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import PageLoader from "@/components/layout/PageLoader";
 import { toast } from "sonner";
 import { Plus, Trash2, Edit2, CheckCircle2 } from "lucide-react";
+import { getApiUrl } from "@/lib/api-config";
 
 interface ActiveCourse {
   title: string;
@@ -45,7 +46,7 @@ export default function ProfilePage() {
   useEffect(() => {
     async function loadProfile() {
       try {
-        const res = await fetch("/api/profile");
+        const res = await fetch(getApiUrl("/api/profile"));
         if (!res.ok) throw new Error("Failed to load profile");
         const data = await res.json();
         
@@ -68,7 +69,7 @@ export default function ProfilePage() {
   const handleSaveProfile = async () => {
     setSaving(true);
     try {
-      const res = await fetch("/api/profile", {
+      const res = await fetch(getApiUrl("/api/profile"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

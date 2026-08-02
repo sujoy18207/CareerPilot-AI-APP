@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api-config";
 
 export type VoiceState = "idle" | "listening" | "processing" | "speaking" | "error";
 
@@ -45,8 +46,10 @@ export function useVoice() {
     audioChunksRef.current = [];
 
     try {
+      if (typeof window === "undefined") return;
+
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        throw new Error("Microphone access is not supported by this browser.");
+        throw new Error("Your browser or device does not support microphone access. Please ensure you are using a secure connection (HTTPS) and have granted permission.");
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -79,9 +82,19 @@ export function useVoice() {
       setStatus("listening");
     } catch (err: any) {
       console.error("Microphone Error:", err);
-      setError(err.message || "Failed to access microphone.");
+      let userMessage = "Failed to access microphone.";
+
+      if (err.name === 'NotAllowedError') {
+        userMessage = "Microphone permission denied. Please enable it in your browser or app settings.";
+      } else if (err.name === 'NotFoundError') {
+        userMessage = "No microphone found on your device.";
+      } else if (err.message) {
+        userMessage = err.message;
+      }
+
+      setError(userMessage);
       setStatus("error");
-      toast.error(err.message || "Microphone access failed.");
+      toast.error(userMessage);
     }
   };
 
@@ -99,7 +112,7 @@ export function useVoice() {
       formData.append("file", audioBlob, "audio.webm");
       formData.append("language_code", selectedLanguage.code);
 
-      const res = await fetch("/api/voice/transcribe", {
+      const res = await fetch(getApiUrl("/api/voice/transcribe"), {
         method: "POST",
         body: formData,
       });
@@ -123,7 +136,7 @@ export function useVoice() {
     stopSpeech();
     setStatus("processing");
     try {
-      const res = await fetch("/api/voice/speak", {
+      const res = await fetch(getApiUrl("/api/voice/speak"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

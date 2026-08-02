@@ -5,6 +5,7 @@ import PageLoader from "@/components/layout/PageLoader";
 import AssessmentForm from "@/components/career/AssessmentForm";
 import RecommendationCard from "@/components/career/RecommendationCard";
 import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api-config";
 
 interface CareerRecommendation {
   _id: string;
@@ -21,7 +22,7 @@ export default function CareerPage() {
 
   const fetchRecommendations = async () => {
     try {
-      const res = await fetch("/api/career/recommendations");
+      const res = await fetch(getApiUrl("/api/career/recommendations"));
       if (!res.ok) throw new Error("Failed to load recommendations");
       const data = await res.json();
       setRecommendations(data);
@@ -40,7 +41,7 @@ export default function CareerPage() {
   const handleSelect = async (recommendationId: string) => {
     setSelectingId(recommendationId);
     try {
-      const res = await fetch("/api/career/select", {
+      const res = await fetch(getApiUrl("/api/career/select"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ recommendationId }),

@@ -5,6 +5,7 @@ import Link from "next/link";
 import PageLoader from "@/components/layout/PageLoader";
 import RoadmapViewer from "@/components/roadmap/RoadmapViewer";
 import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api-config";
 
 interface Milestone {
   _id?: string;
@@ -32,7 +33,7 @@ export default function RoadmapPage() {
 
   const fetchRoadmap = async () => {
     try {
-      const res = await fetch("/api/roadmap");
+      const res = await fetch(getApiUrl("/api/roadmap"));
       if (!res.ok) {
         setErrorStatus(res.status);
         if (res.status !== 404) {
@@ -57,7 +58,7 @@ export default function RoadmapPage() {
 
   const handleMilestoneToggle = async (milestoneId: string, completed: boolean) => {
     try {
-      const res = await fetch("/api/roadmap/progress", {
+      const res = await fetch(getApiUrl("/api/roadmap/progress"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ milestoneId, completed }),

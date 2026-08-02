@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api-config";
 
 interface PdfUploaderProps {
   onUploadSuccess: (document: any) => void;
@@ -95,7 +96,7 @@ export default function PdfUploader({ onUploadSuccess }: PdfUploaderProps) {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch("/api/pdf/upload", {
+      const res = await fetch(getApiUrl("/api/pdf/upload"), {
         method: "POST",
         body: formData,
       });

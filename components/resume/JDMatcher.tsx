@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api-config";
 
 interface JDMatcherProps {
   resumeId: string;
@@ -20,7 +21,7 @@ export default function JDMatcher({ resumeId }: JDMatcherProps) {
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/resume/${resumeId}/match-jd`, {
+      const res = await fetch(getApiUrl(`/api/resume/${resumeId}/match-jd`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ jobDescription }),

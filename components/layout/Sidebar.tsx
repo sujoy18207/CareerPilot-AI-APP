@@ -62,11 +62,11 @@ export default function Sidebar({ className, onToggle }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "flex flex-col h-screen w-64 fixed left-0 top-0 bg-sidebar border-r-2 border-black/60 py-8 z-40 transition-colors duration-300",
+        "flex flex-col h-screen w-64 fixed left-0 top-0 bg-sidebar border-r-2 border-black/60 py-4 md:py-8 z-40 transition-colors duration-300",
         className
       )}
     >
-      <div className="px-6 mb-8 pb-6 border-b-2 border-black/80 flex items-center justify-between gap-2">
+      <div className="px-4 md:px-6 mb-4 md:mb-8 pb-4 md:pb-6 border-b-2 border-black/80 flex items-center justify-between gap-2">
         <Link href="/dashboard" className="flex items-center gap-3 min-w-0">
           <BrandLogo size="md" className="neo-shadow rounded-lg" />
           <div className="truncate">

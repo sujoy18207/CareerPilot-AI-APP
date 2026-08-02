@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Play, Pause, RotateCcw, Volume2, SkipBack, SkipForward, Plus, Trash2, Check } from "lucide-react";
+import { getApiUrl } from "@/lib/api-config";
 
 interface TodoItem {
   _id: string;
@@ -108,7 +109,7 @@ export default function StudyPage() {
   useEffect(() => {
     async function loadTodos() {
       try {
-        const res = await fetch("/api/todo");
+        const res = await fetch(getApiUrl("/api/todo"));
         if (!res.ok) throw new Error();
         const data = await res.json();
         setTodos(data);
@@ -124,7 +125,7 @@ export default function StudyPage() {
 
   const loadFocusMetrics = async () => {
     try {
-      const res = await fetch("/api/study/focus");
+      const res = await fetch(getApiUrl("/api/study/focus"));
       if (!res.ok) throw new Error();
       const data = await res.json();
       setChartData({
@@ -143,7 +144,7 @@ export default function StudyPage() {
   const logFocusMinutes = async (minutes: number, mode: typeof timerMode = "focus") => {
     if (mode !== "focus" || minutes < 0.25) return;
     try {
-      const res = await fetch("/api/study/focus", {
+      const res = await fetch(getApiUrl("/api/study/focus"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ minutes, mode }),
@@ -319,7 +320,7 @@ export default function StudyPage() {
   const handleAddTodo = async () => {
     if (!todoInput.trim()) return;
     try {
-      const res = await fetch("/api/todo", {
+      const res = await fetch(getApiUrl("/api/todo"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: todoInput.trim() }),
@@ -336,7 +337,7 @@ export default function StudyPage() {
   // Toggle Todo Checked Status
   const handleToggleTodo = async (id: string, currentStatus: boolean) => {
     try {
-      const res = await fetch("/api/todo", {
+      const res = await fetch(getApiUrl("/api/todo"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, completed: !currentStatus }),
@@ -352,7 +353,7 @@ export default function StudyPage() {
   // Delete Todo Item
   const handleDeleteTodo = async (id: string) => {
     try {
-      const res = await fetch(`/api/todo?id=${id}`, {
+      const res = await fetch(getApiUrl(`/api/todo?id=${id}`), {
         method: "DELETE",
       });
       if (!res.ok) throw new Error();
