@@ -86,7 +86,7 @@ export default function RegisterForm() {
   };
 
   const fields = [
-    { id: "name", label: "Full Name", type: "text", placeholder: "John Doe", error: errors.name },
+    { id: "name", label: "Full Name", type: "text", placeholder: "Sujoy Singha", error: errors.name },
     { id: "email", label: "Email", type: "email", placeholder: "name@example.com", error: errors.email },
     { id: "password", label: "Password", type: "password", placeholder: "••••••••", error: errors.password },
     { id: "confirmPassword", label: "Confirm Password", type: "password", placeholder: "••••••••", error: errors.confirmPassword },
@@ -121,9 +121,8 @@ export default function RegisterForm() {
                 type={field.type}
                 placeholder={field.placeholder}
                 {...register(field.id)}
-                className={`w-full border bg-[#131313] px-3 py-2 text-sm text-white placeholder:text-[#636565] focus:border-white focus:ring-0 focus:outline-none transition-colors ${
-                  field.error ? "border-[#ffb4ab]" : "border-[#262626]"
-                }`}
+                className={`w-full border bg-[#131313] px-3 py-2 text-sm text-white placeholder:text-[#636565] focus:border-white focus:ring-0 focus:outline-none transition-colors ${field.error ? "border-[#ffb4ab]" : "border-[#262626]"
+                  }`}
               />
               {field.error && (
                 <p className="text-xs text-[#ffb4ab] mt-1">{field.error.message}</p>
