@@ -64,9 +64,9 @@ export function getLlmModel(isPdf = false, modelSelection?: string): string {
       return modelSelection; // Allow custom model selection directly if selected
     }
     if (isPdf) {
-      return process.env.ZENMUX_PDF_MODEL || process.env.ZENMUX_MODEL || "openai/gpt-5.5";
+      return process.env.ZENMUX_PDF_MODEL || process.env.ZENMUX_MODEL || "openai/gpt-4o";
     }
-    return process.env.ZENMUX_MODEL || "openai/gpt-5.5";
+    return process.env.ZENMUX_MODEL || "openai/gpt-4o-mini";
   }
 
   if (geminiKey && !isPlaceholder(geminiKey)) {
